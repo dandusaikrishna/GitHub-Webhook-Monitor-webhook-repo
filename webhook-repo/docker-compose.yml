@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:5.0
+    container_name: github_webhooks_db
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: github_webhooks
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - webhook_network
+
+  webhook_app:
+    build: .
+    container_name: github_webhook_monitor
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://admin:admin123@mongodb:27017/github_webhooks?authSource=admin
+      - FLASK_ENV=development
+    depends_on:
+      - mongodb
+    networks:
+      - webhook_network
+    volumes:
+      - .:/app
+    command: ["python", "app.py"]
+
+  # Optional: MongoDB Express for database management
+  mongo_express:
+    image: mongo-express:latest
+    container_name: mongo_express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin123
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin123@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+    depends_on:
+      - mongodb
+    networks:
+      - webhook_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  webhook_network:
+    driver: bridge
