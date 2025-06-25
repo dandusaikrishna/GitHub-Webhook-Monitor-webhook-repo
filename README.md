@@ -279,22 +279,3 @@ docker run -p 5000:5000 webhook-monitor
 3. **Caching**: Consider implementing Redis caching for high-traffic scenarios
 4. **Pagination**: API returns latest 50 events to prevent large responses
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📝 License
-
-This project is part of a developer assessment and is for educational purposes.
-
----
-
-**Next Steps:**
-1. Create the `action-repo` repository
-2. Set up webhooks pointing to this application
-3. Test with real GitHub activities
-4. Monitor the live dashboard!
