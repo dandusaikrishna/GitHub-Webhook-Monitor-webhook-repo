@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 ### 4. Set Up MongoDB
 
-**Option A: Local MongoDB**
+**Option A: Local MongoDB** 
 ```bash
 # Install MongoDB locally
 # Start MongoDB service
